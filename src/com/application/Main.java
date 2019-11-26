@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Main {
 
-    static PcapNetworkInterface getNetworkDevice() {
+    private static PcapNetworkInterface getNetworkDevice() {
         PcapNetworkInterface device = null;
         try {
             device = new NifSelector().selectNetworkInterface();
@@ -88,9 +88,7 @@ public class Main {
         // Tell the handle to loop using the listener we created
         try {
             //TODO: Make infinite for final submission.
-            while (true) {
-                handle.loop(10, listener);
-            }
+            handle.loop(10, listener);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
