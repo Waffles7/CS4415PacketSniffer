@@ -151,6 +151,13 @@ public class PacketSniffer {
                 //Save old packet sequence numbers
                 //Compare the new packet to the rest, if an old one re-appears then it's possible someone is
                 //Attacking
+
+
+                //Check if a packet is indicative of the end of a session, if so the packet needs to be removed from
+                //The list of open connections.
+//                if (condition) {
+//                    openConnections.remove(tcpTuple);
+//                }
             }
 
             if (safe) {
