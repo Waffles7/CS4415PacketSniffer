@@ -28,6 +28,9 @@ public class PacketSniffer {
     //possibly show a Man in the Middle attack
     private static final Long EXCESSIVE_DELAY = 100L;
 
+    /*TODO: Figure out how to change values in an anonymous functions, they don't change from their
+       initial value
+     */
     private static final Long[] numPackets = {0L};
     private static final Long[] summedDelay = {0L};
     private static final Long[] averageDelay = {-1L};
@@ -122,6 +125,8 @@ public class PacketSniffer {
                 openConnections.put(tcpTuple, new ArrayList<>());
             } else {
                 //Check possible features for sign of an attack and remove if connection is finishing
+
+                //Looking for average delay that is excessively long
                 if (averageDelay[0] == -1L) {
                     Long mostRecent = openConnections.get(tcpTuple).get(openConnections.get(tcpTuple).size() - 1);
                     Long delay = System.currentTimeMillis() - mostRecent;
@@ -134,6 +139,18 @@ public class PacketSniffer {
                         safe = false;
                     }
                 }
+
+                //Looking for sequence numbers that are repeated.
+
+                //Save more recent packet on a particular connection
+                //Compare the new packet to the old, if repeated sequence then flag as a possible bad packet
+
+
+                //Looking for sequence numbers that are out of order
+
+                //Save old packet sequence numbers
+                //Compare the new packet to the rest, if an old one re-appears then it's possible someone is
+                //Attacking
             }
 
             if (safe) {
@@ -145,9 +162,12 @@ public class PacketSniffer {
 
         // Tell the handle to loop using the listener we created
         try {
-            //TODO: Make infinite for final submission.
+            //TODO: Make larger for final submission.
+            //Capture some packets to determine the average network delay
             handle.loop(10, listener);
             averageDelay[0] = summedDelay[0] / numPackets[0];
+            //TODO: Make larger for final submission.
+            //Capture packets infinitely
             handle.loop(10, listener);
         } catch (InterruptedException e) {
             e.printStackTrace();
