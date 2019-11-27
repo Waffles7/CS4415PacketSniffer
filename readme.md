@@ -7,5 +7,7 @@ You need a packet capturing library installed. On Linux and Mac, libpcap is typi
 
 ### Pcap4j libraries (from Maven)
 org.pcap4j:pcap4j-packetfactory-static:1.7.52
+
 org.pcap4j:pcap4j-packetfactory-propertiesbased:1.7.52
+
 org.pcap4j:pcap4j-core:1.7.52
