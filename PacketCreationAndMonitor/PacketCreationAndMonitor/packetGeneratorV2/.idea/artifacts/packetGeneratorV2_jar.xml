@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="packetGeneratorV2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/packetGeneratorV2_jar</output-path>
+    <root id="archive" name="packetGeneratorV2.jar">
+      <element id="module-output" name="packetGeneratorV2" />
+    </root>
+  </artifact>
+</component>
