@@ -75,7 +75,6 @@ public class PacketSniffer {
                     currentPacketTime = prevPacketTime;
                     prevPacketTime = System.nanoTime();
                 }
-                builder.append("Delay Between Packets Processed: ").append(prevPacketTime - currentPacketTime);
                 if (currentPacketTime != -1L && prevPacketTime - currentPacketTime > excessiveDelay) {
                     builder.append("\nPacket flagged, possible Man in the middle attack! (excessive delay between packets)\n");
                 }
@@ -118,12 +117,11 @@ public class PacketSniffer {
                     if (header.getOptions().size() > 7) {
                         builder.append("Timestamp: ").append(header.getOptions().get(8).getKind().valueAsString()).append("\n");
                     }
-
-                    builder.append("Sequence Number: ").append(header.getSequenceNumber()).append("\n");
                     if (prevSequenceNumber != -1) {
                         if (prevSequenceNumber == header.getSequenceNumber()) {
                             builder.append("\nPacket flagged, possible Man in the middle attack! (repeated sequence number)\n");
                         }
+                        prevSequenceNumber = header.getSequenceNumber();
                     } else {
                         prevSequenceNumber = header.getSequenceNumber();
                     }

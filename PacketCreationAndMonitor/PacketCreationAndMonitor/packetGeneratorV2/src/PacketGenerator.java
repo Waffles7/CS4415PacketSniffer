@@ -20,7 +20,7 @@ public class PacketGenerator {
             scanner.next();*/
 
             for (int i = 0; i < 10; i++) {
-                HttpsURLConnection conn = (HttpsURLConnection) new URL("https://192.168.2.43:443").openConnection();
+                HttpsURLConnection conn = (HttpsURLConnection) new URL("https://192.168.2.43").openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
