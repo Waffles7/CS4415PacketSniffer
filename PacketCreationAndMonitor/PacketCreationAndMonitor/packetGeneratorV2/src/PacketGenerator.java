@@ -1,13 +1,14 @@
+package PacketCreationAndMonitor.packetGeneratorV2.src;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 public class PacketGenerator {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try {
             /*String[] commands = {"../elevateRawCap.bat"};
             ProcessBuilder pb = new ProcessBuilder(commands);
@@ -19,7 +20,7 @@ public class PacketGenerator {
             scanner.next();*/
 
             for (int i = 0; i < 10; i++) {
-                HttpURLConnection conn = (HttpURLConnection) new URL("http://localhost:8080").openConnection();
+                HttpsURLConnection conn = (HttpsURLConnection) new URL("https://192.168.2.43:443").openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
@@ -30,6 +31,7 @@ public class PacketGenerator {
                 while ((line = reader.readLine()) != null) {
                     System.out.println(line);
                 }
+                //Thread.sleep(10000000);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e);
