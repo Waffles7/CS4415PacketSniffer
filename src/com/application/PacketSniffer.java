@@ -10,6 +10,7 @@ import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.NifSelector;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Class to sniff packets on a network (Only tested on Windows with Wincap)
@@ -27,7 +28,7 @@ public class PacketSniffer {
     private static Long currentPacketTime = -1L;
     static Long delay = 0L;
     private static Long numPackets = 0L;
-    private static Long excessiveDelay = 10000L;
+    private static Long singleConnectionDelay = 10000L;
     private static int prevSequenceNumber = -1;
 
     private static PcapNetworkInterface getNetworkDevice() {
@@ -60,9 +61,28 @@ public class PacketSniffer {
         String filter = "tcp port 80";
         handle.setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
 
-        // Tell the handle to loop using the listener we created
-        //TODO: Make larger for final submission.
         //Ping server to establish delay
+        try {
+            //Set the ip to ping
+            String ipAddress = "127.0.0.1";
+
+            //"ping" the IP address to determine single connection delay for responses
+            InetAddress inet = InetAddress.getByName(ipAddress);
+            long cumulativeDelay = 0L;
+            for (int i = 0; i < 10; i++) {
+                String s;
+                Long currentTime = System.nanoTime();
+                inet.isReachable(5000);
+                Long finished = System.nanoTime();
+                cumulativeDelay += finished - currentTime;
+            }
+
+            singleConnectionDelay = cumulativeDelay / 10;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Process packets one-by-one
         int i = 0;
         while (i < Integer.MAX_VALUE) {
             PcapPacket packet = handle.getNextPacket();
@@ -71,11 +91,11 @@ public class PacketSniffer {
                 //Check for delay in timing, variation in Java running means this does not work perfectly
                 if (prevPacketTime == -1L) {
                     prevPacketTime = System.nanoTime();
-                } else if (excessiveDelay != -1L) {
+                } else if (singleConnectionDelay != -1L) {
                     currentPacketTime = prevPacketTime;
                     prevPacketTime = System.nanoTime();
                 }
-                if (currentPacketTime != -1L && prevPacketTime - currentPacketTime > excessiveDelay) {
+                if (currentPacketTime != -1L && prevPacketTime - currentPacketTime > singleConnectionDelay) {
                     builder.append("\nPacket flagged, possible Man in the middle attack! (excessive delay between packets)\n");
                 }
 
@@ -140,9 +160,8 @@ public class PacketSniffer {
             i++;
         }
 
-        //TODO: Make larger for final submission.
-        //Capture packets infinitely
-        //handle.loop(10, listener);
+
+        //Print the stats for the capture session
         PcapStat stats = handle.getStats();
 
         //Only gets run if the packet looping finishes.
